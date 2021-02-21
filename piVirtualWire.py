@@ -19,6 +19,8 @@ MAX_BPS=10000
 
 _HEADER=[0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x2a, 0x38, 0x2c]
 
+_EXTRA_HEADER = [0xff,0xab,0x2a,0x38]
+
 _CTL=3
 
 _SYMBOL=[
@@ -101,7 +103,10 @@ class tx():
       for i in _HEADER:
          self._nibble(i)
 
-      crc = self._byte(0xFFFF, len(data)+_CTL)
+      crc = self._byte(0xFFFF, len(data)+_CTL + len(_EXTRA_HEADER))
+
+      for v in _EXTRA_HEADER:
+          crc = self._byte(crc, v)
 
       for i in data:
 
